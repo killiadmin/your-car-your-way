@@ -1,0 +1,15 @@
+<div class="agencies-container">
+  <h2>Liste des Agences</h2>
+
+  <div *ngIf="loading" class="loading">
+    Chargement en cours...
+  </div>
+
+  <div *ngIf="error" class="error">
+    {{ error }}
+  </div>
+
+  <div *ngIf="agencies && !loading" class="agencies-list">
+    <pre>{{ agencies | json }}</pre>
+  </div>
+</div>
