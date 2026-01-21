@@ -1,26 +1,31 @@
 package com.poc.your_car_your_way.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Setter
 @Getter
 @Entity
-@Table(name = "EMPLOYEE")
-public class Employee {
+@Table(name = "CUSTOMER")
+public class Customer {
 
     @Id
-    @Column(name = "employee_id", columnDefinition = "CHAR(36)")
-    private UUID employee_id;
+    @Column(name = "customer_id", columnDefinition = "CHAR(36)")
+    private UUID customer_id;
+
+    @Email(message = "Email should be valid")
+    @NotBlank(message = "Email is mandatory")
+    @Column(name = "email", nullable = false, unique = true)
+    private String email;
 
     @NotBlank(message = "First name is mandatory")
     @Column(name = "first_name", nullable = false)
@@ -30,13 +35,8 @@ public class Employee {
     @Column(name = "last_name", nullable = false)
     private String last_name;
 
-    @NotBlank(message = "Role is mandatory")
-    @Column(name = "role", nullable = false)
-    private String role;
-
-    @ManyToOne
-    @JoinColumn(name = "agency_id", nullable = false)
-    private Agency agency;
+    @Column(name = "phone", nullable = false)
+    private String phone;
 
     @Column(name = "created_at")
     private LocalDateTime created_at;
@@ -44,8 +44,8 @@ public class Employee {
     @Transient
     private List<Address> addresses = new ArrayList<>();
 
-    public Employee() {
-        this.employee_id = UUID.randomUUID();
+    public Customer() {
+        this.customer_id = UUID.randomUUID();
     }
 
     @PrePersist
@@ -54,7 +54,7 @@ public class Employee {
     }
 
     public void addAddress(Address address) {
-        address.setUser_id(this.employee_id);
+        address.setUser_id(this.customer_id);
         this.addresses.add(address);
     }
 

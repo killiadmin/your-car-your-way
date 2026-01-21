@@ -1,5 +1,5 @@
 export interface Agency {
-  agencyId: string;
+  agency_id: string;
   name: string;
-  createdAt: string;
+  created_at: string;
 }

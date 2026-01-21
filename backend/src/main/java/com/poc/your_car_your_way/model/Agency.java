@@ -18,18 +18,18 @@ import java.util.UUID;
 public class Agency {
 
     @Id
-    @Column(name = "agencyId", columnDefinition = "CHAR(36)")
-    private String agencyId;
+    @Column(name = "agency_id", columnDefinition = "CHAR(36)")
+    private String agency_id;
 
     @Column(name = "name", nullable = false)
     private String name;
 
     @CreatedDate
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    @Column(name = "createdAt", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime created_at;
 
     public Agency() {
-        this.agencyId = UUID.randomUUID().toString();
+        this.agency_id = UUID.randomUUID().toString();
     }
 }
