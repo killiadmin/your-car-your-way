@@ -1,0 +1,57 @@
+<div class="chat-container">
+  <h2>Support</h2>
+
+  <div *ngIf="!isChatJoined" class="login-form">
+    <h3>Join a support chat</h3>
+    <input type="text" [(ngModel)]="username" placeholder="Your name (employee)" [disabled]="isLoading"/>
+    <input type="text" [(ngModel)]="roomId" placeholder="Guest Room ID" [disabled]="isLoading"/>
+    <button (click)="joinChat()" [disabled]="isLoading">
+      <span *ngIf="!isLoading">Join the chat </span>
+      <span *ngIf="isLoading">Loading ...</span>
+    </button>
+
+    <p *ngIf="isLoading" class="loading-message">
+      Loading to server ...
+    </p>
+  </div>
+
+  <div *ngIf="isChatJoined" class="chat-area">
+    <div class="chat-info">
+      <p><strong>Room ID:</strong> {{ roomId }}</p>
+      <p><strong>Connected as:</strong> {{ username }} (Employee)</p>
+      <p *ngIf="isConnected" class="status-connected">Connected</p>
+      <p *ngIf="!isConnected" class="status-disconnected">Disconnected</p>
+      <p *ngIf="isChatClosed" class="status-closed">Closed chat</p>
+
+      <button *ngIf="!isChatClosed && isConnected" class="close-chat-btn" (click)="closeChat()">
+        Close chat (Issue resolved)
+      </button>
+    </div>
+
+    <div class="messages-container">
+      <div *ngFor="let message of messages" [class]="'message message-' + message.type.toLowerCase()"
+           [class.own-message]="message.senderId === userId">
+        <div *ngIf="message.type === 'CHAT'" class="chat-message">
+          <strong>{{ message.senderName }}:</strong> {{ message.content }}
+        </div>
+        <div *ngIf="message.type === 'JOIN'" class="system-message">
+          {{ message.content }}
+        </div>
+        <div *ngIf="message.type === 'LEAVE'" class="system-message">
+          {{ message.content }}
+        </div>
+        <div *ngIf="message.type === 'CLOSE'" class="close-message">
+          {{ message.content }}
+        </div>
+      </div>
+    </div>
+
+    <div class="message-input">
+      <input type="text" [(ngModel)]="messageContent"
+             placeholder="Type your message..." [disabled]="!isConnected || isChatClosed" (keyup.enter)="sendMessage()"/>
+      <button (click)="sendMessage()" [disabled]="!isConnected || !messageContent.trim() || isChatClosed">
+        Send
+      </button>
+    </div>
+  </div>
+</div>
