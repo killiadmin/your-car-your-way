@@ -31,8 +31,10 @@
     <div class="messages-container">
       <div *ngFor="let message of messages" [class]="'message message-' + message.type.toLowerCase()"
            [class.own-message]="message.senderId === userId">
-        <div *ngIf="message.type === 'CHAT'" class="chat-message">
-          <strong>{{ message.senderName }}:</strong> {{ message.content }}
+        <div *ngIf="message.type === 'CHAT'" class="chat-message" style="display: flex;">
+          <img *ngIf="message.senderId === userId" src="logo_ycyw.png" alt="Employee" class="employee-avatar" style="width: 50px; padding-left: 10px; padding-right: 10px;"/>
+          <img *ngIf="message.senderId !== userId" src="logo_avatar.png" alt="Client" class="employee-avatar" style="width: 50px; padding-left: 10px; padding-right: 10px;"/>
+          <div style="display: flex; align-items: center;"><strong>{{ message.senderName }}: &nbsp;</strong> {{ message.content }}</div>
         </div>
         <div *ngIf="message.type === 'JOIN'" class="system-message">
           {{ message.content }}
