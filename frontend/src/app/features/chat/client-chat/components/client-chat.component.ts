@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { WebSocketService, ChatBox } from '../../../../services/websocket.service';
@@ -12,7 +12,7 @@ import { filter, take } from 'rxjs/operators';
   templateUrl: './client-chat.component.html',
   styleUrls: ['./client-chat.component.css']
 })
-export class ClientChatComponent implements OnInit, OnDestroy {
+export class ClientChatComponent implements OnInit, OnDestroy, AfterViewInit {
   username: string = '';
   userId: string = '';
   roomId: string = '';
@@ -22,6 +22,8 @@ export class ClientChatComponent implements OnInit, OnDestroy {
   isChatStarted: boolean = false;
   isLoading: boolean = false;
   isChatClosed: boolean = false;
+
+  @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
 
   private messageSubscription?: Subscription;
   private connectionSubscription?: Subscription;
@@ -35,6 +37,10 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     this.connectionSubscription = this.webSocketService.connected$.subscribe(connected => {
       this.isConnected = connected;
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.scrollToBottom();
   }
 
   async startChat(): Promise<void> {
@@ -70,6 +76,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
             }
 
             this.cdr.detectChanges();
+            this.scrollToBottom();
           },
           error: (error) => {
             console.error(error);
@@ -87,6 +94,19 @@ export class ClientChatComponent implements OnInit, OnDestroy {
       this.isLoading = false;
       this.cdr.detectChanges();
     }
+  }
+
+  private scrollToBottom(): void {
+    setTimeout(() => {
+      try {
+        const container = this.messagesContainer?.nativeElement;
+        if (container) {
+          container.scrollTop = container.scrollHeight;
+        }
+      } catch (err) {
+        console.error('Scroll error:', err);
+      }
+    }, 0); // Le setTimeout 0 laisse le temps au DOM de se mettre à jour
   }
 
   sendMessage(): void {

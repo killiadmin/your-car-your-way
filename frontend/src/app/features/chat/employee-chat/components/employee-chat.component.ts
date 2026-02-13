@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { WebSocketService, ChatBox } from '../../../../services/websocket.service';
@@ -12,7 +12,7 @@ import { filter, take } from 'rxjs/operators';
   templateUrl: './employee-chat.component.html',
   styleUrls: ['./employee-chat.component.css']
 })
-export class EmployeeChatComponent implements OnInit, OnDestroy {
+export class EmployeeChatComponent implements OnInit, OnDestroy, AfterViewInit {
   username: string = '';
   userId: string = '';
   roomId: string = '';
@@ -22,6 +22,8 @@ export class EmployeeChatComponent implements OnInit, OnDestroy {
   isChatJoined: boolean = false;
   isLoading: boolean = false;
   isChatClosed: boolean = false;
+
+  @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
 
   private messageSubscription?: Subscription;
   private connectionSubscription?: Subscription;
@@ -35,6 +37,23 @@ export class EmployeeChatComponent implements OnInit, OnDestroy {
     this.connectionSubscription = this.webSocketService.connected$.subscribe(connected => {
       this.isConnected = connected;
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.scrollToBottom();
+  }
+
+  private scrollToBottom(): void {
+    setTimeout(() => {
+      try {
+        const container = this.messagesContainer?.nativeElement;
+        if (container) {
+          container.scrollTop = container.scrollHeight;
+        }
+      } catch (err) {
+        console.error('Scroll error:', err);
+      }
+    }, 0);
   }
 
   async joinChat(): Promise<void> {
@@ -69,6 +88,7 @@ export class EmployeeChatComponent implements OnInit, OnDestroy {
             }
 
             this.cdr.detectChanges();
+            this.scrollToBottom(); // ← scroll après chaque nouveau message
           }
         });
 
@@ -78,6 +98,7 @@ export class EmployeeChatComponent implements OnInit, OnDestroy {
       this.isChatJoined = true;
 
       this.cdr.detectChanges();
+      this.scrollToBottom(); // ← scroll à l'entrée dans le chat
     } catch (error) {
       console.error(error);
       this.isLoading = false;
