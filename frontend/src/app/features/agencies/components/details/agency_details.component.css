@@ -1,0 +1,82 @@
+.agencies-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  font-family: sans-serif;
+}
+
+.agency-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+.agency-header {
+  background-color: #f5f7ff;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.agency-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: #333;
+}
+
+.agency-body {
+  padding: 0.75rem 1rem;
+}
+
+.agency-body p {
+  margin: 0.3rem 0;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.label {
+  font-weight: 600;
+  color: #333;
+}
+
+.loading-state {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #666;
+  padding: 1rem;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid #ddd;
+  border-top-color: #5c6bc0;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.error-state {
+  color: #c0392b;
+  background: #fdecea;
+  padding: 1rem;
+  border-radius: 6px;
+}
+
+.error-state button {
+  margin-top: 0.5rem;
+  padding: 0.4rem 1rem;
+  background: #c0392b;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.empty-state {
+  text-align: center;
+  color: #999;
+  padding: 2rem;
+}
+

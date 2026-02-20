@@ -1,15 +1,30 @@
 <div class="agencies-container">
   <h2>Liste des Agences</h2>
 
-  <div *ngIf="loading" class="loading">
-    Chargement en cours...
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner"></div>
+    <p>Chargement en cours...</p>
   </div>
 
-  <div *ngIf="error" class="error">
-    {{ error }}
+  <div *ngIf="error && !loading" class="error-state">
+    <p>{{ error }}</p>
+    <button (click)="loadAgencies()">Réessayer</button>
   </div>
 
-  <div *ngIf="agencies && !loading" class="agencies-list">
-    <pre>{{ agencies | json }}</pre>
-  </div>
+  <ng-container *ngIf="!loading && !error">
+    <div *ngIf="agencies.length === 0" class="empty-state">
+      <p>Aucune agence trouvée.</p>
+    </div>
+
+    <div *ngFor="let agency of agencies" class="agency-card">
+      <div class="agency-header">
+        <h3>{{ agency.name }}</h3>
+      </div>
+      <div class="agency-body">
+        <p><span class="label">ID :</span> {{ agency.agency_id }}</p>
+        <p><span class="label">Créée le :</span> {{ agency.created_at | date:'dd/MM/yyyy à HH:mm' }}</p>
+      </div>
+    </div>
+
+  </ng-container>
 </div>

@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AgencyService } from '../../services/agency.service';
-import { Agencies } from '../../interfaces/api/agencies.interface';
+import { Agency } from '../../interfaces/model/agency.model';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-agencies',
@@ -10,11 +11,14 @@ import { Agencies } from '../../interfaces/api/agencies.interface';
   styleUrl: './agency_details.component.css',
 })
 export class Agency_detailsComponent implements OnInit {
-  agencies: Agencies | null = null;
-  loading = false;
+  agencies: Agency[] = [];
+  loading = true;
   error: string | null = null;
 
-  constructor(private agencyService: AgencyService) {}
+  constructor(
+    private agencyService: AgencyService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loadAgencies();
@@ -24,19 +28,21 @@ export class Agency_detailsComponent implements OnInit {
     this.loading = true;
     this.error = null;
 
-    this.agencyService.getAgencies().subscribe({
-      next: (data) => {
-        this.agencies = data;
-        this.loading = false;
-      },
-      error: (err) => {
-        this.error = 'Erreur lors du chargement des agences';
-        this.loading = false;
-        console.error('Erreur:', err);
-      },
-      complete: () => {
-        console.log('Chargement terminé');
-      }
-    });
+    this.agencyService.getAgencies()
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.detectChanges();
+        })
+      )
+      .subscribe({
+        next: (data: Agency[]) => {
+          this.agencies = data;
+        },
+        error: (err) => {
+          this.error = 'Erreur lors du chargement des agences';
+          console.error('Erreur:', err);
+        }
+      });
   }
 }

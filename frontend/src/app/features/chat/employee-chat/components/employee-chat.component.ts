@@ -88,7 +88,7 @@ export class EmployeeChatComponent implements OnInit, OnDestroy, AfterViewInit {
             }
 
             this.cdr.detectChanges();
-            this.scrollToBottom(); // ← scroll après chaque nouveau message
+            this.scrollToBottom();
           }
         });
 
@@ -98,7 +98,7 @@ export class EmployeeChatComponent implements OnInit, OnDestroy, AfterViewInit {
       this.isChatJoined = true;
 
       this.cdr.detectChanges();
-      this.scrollToBottom(); // ← scroll à l'entrée dans le chat
+      this.scrollToBottom();
     } catch (error) {
       console.error(error);
       this.isLoading = false;

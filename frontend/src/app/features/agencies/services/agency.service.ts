@@ -1,7 +1,7 @@
-import {Agencies} from '../interfaces/api/agencies.interface';
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
+import { Agency } from '../interfaces/model/agency.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +11,7 @@ export class AgencyService {
 
   constructor(private httpClient: HttpClient) { }
 
-  public getAgencies(): Observable<Agencies> {
-    return this.httpClient.get<Agencies>(this.pathService + '/agencies');
+  public getAgencies(): Observable<Agency[]> {
+    return this.httpClient.get<Agency[]>(this.pathService + '/agencies');
   }
 }
