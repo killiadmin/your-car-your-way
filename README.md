@@ -1,5 +1,7 @@
 # Your Car Your Way
 
+![Screenshot](frontend/public/banner_ycyw.png)
+
 Application de location de véhicules développée avec Spring Boot 4.0.1 (Backend) et Angular 21 (Frontend).
 
 Your Car Your Way fait des locations de voitures depuis une vingtaine d’années. Initialement en Angleterre, l’entreprise s’est étendue sur le marché européen, puis, depuis l’an dernier, sur le marché américain.

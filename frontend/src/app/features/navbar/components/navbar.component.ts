@@ -16,7 +16,8 @@ export class NavbarComponent {
     { label: 'Agences', route: '/agencies', active: true },
     { label: 'Locations', route: '/rentals', active: false },
     { label: 'Profil', route: '/profil', active: false },
-    { label: 'Support', route: '/support', active: false },
+    { label: 'Support', route: '/client', active: false },
+    { label: 'Ticket', route: '/employee', active: false },
     { label: 'Déconnexion', route: '/logout', active: false }
   ];
 
