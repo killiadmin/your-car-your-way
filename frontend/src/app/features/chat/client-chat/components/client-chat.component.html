@@ -29,6 +29,7 @@
       <p><strong>Connected as :</strong> {{ username }}</p>
       <p *ngIf="isConnected" class="status-connected">Connected</p>
       <p *ngIf="!isConnected" class="status-disconnected">Disconnected</p>
+      <p *ngIf="isChatClosed" class="status-closed">Chat closed by support</p>
       <p class="info-text">
         <small>Share Room ID with an employee so they can join you</small>
       </p>
@@ -53,6 +54,9 @@
         <div *ngIf="message.type === 'LEAVE'" class="system-message">
           {{ message.content }}
         </div>
+        <div *ngIf="message.type === 'CLOSE'" class="close-message">
+          {{ message.content }}
+        </div>
       </div>
     </div>
 
@@ -61,10 +65,10 @@
         type="text"
         [(ngModel)]="messageContent"
         placeholder="Type your message ..."
-        [disabled]="!isConnected"
+        [disabled]="!isConnected || isChatClosed"
         (keyup.enter)="sendMessage()"
       />
-      <button (click)="sendMessage()" [disabled]="!isConnected || !messageContent.trim()">
+      <button (click)="sendMessage()" [disabled]="!isConnected || !messageContent.trim() || isChatClosed">
         Send
       </button>
     </div>
