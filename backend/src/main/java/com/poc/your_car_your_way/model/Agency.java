@@ -8,6 +8,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Setter
@@ -29,7 +31,20 @@ public class Agency {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime created_at;
 
+    @Transient
+    private List<Address> addresses = new ArrayList<>();
+
+    public void addAddress(Address address) {
+        address.setEntity_id(UUID.fromString(this.agency_id));
+        this.addresses.add(address);
+    }
+
     public Agency() {
         this.agency_id = UUID.randomUUID().toString();
     }
+
+    public void removeAddress(Address address) {
+        this.addresses.remove(address);
+    }
+
 }

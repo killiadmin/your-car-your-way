@@ -1,6 +1,7 @@
 package com.poc.your_car_your_way.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,6 +20,11 @@ public class Employee {
     @Id
     @Column(name = "employee_id", columnDefinition = "CHAR(36)")
     private UUID employee_id;
+
+    @Email(message = "Email should be valid")
+    @NotBlank(message = "Email is mandatory")
+    @Column(name = "email", nullable = false, unique = true)
+    private String email;
 
     @NotBlank(message = "First name is mandatory")
     @Column(name = "first_name", nullable = false)
@@ -39,9 +45,6 @@ public class Employee {
     @Column(name = "created_at")
     private LocalDateTime created_at;
 
-    @Transient
-    private List<Address> addresses = new ArrayList<>();
-
     public Employee() {
         this.employee_id = UUID.randomUUID();
     }
@@ -49,14 +52,5 @@ public class Employee {
     @PrePersist
     protected void onCreate() {
         created_at = LocalDateTime.now();
-    }
-
-    public void addAddress(Address address) {
-        address.setUser_id(this.employee_id);
-        this.addresses.add(address);
-    }
-
-    public void removeAddress(Address address) {
-        this.addresses.remove(address);
     }
 }

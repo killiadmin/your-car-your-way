@@ -56,82 +56,76 @@ SPRING_DATASOURCE_PASSWORD=votre_mot_de_passe
 
 Exécuter le script SQL suivant pour créer les tables et insérer les données de test :
 
-```sql
 -- Création des tables
-CREATE TABLE IF NOT EXISTS agencies (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    address VARCHAR(255),
-    phone VARCHAR(50),
-    email VARCHAR(255),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+```sql
+CREATE TABLE IF NOT EXISTS ADDRESS (
+address_id CHAR(36) PRIMARY KEY,
+street VARCHAR(255) NOT NULL,
+city VARCHAR(255) NOT NULL,
+postal_code VARCHAR(50) NOT NULL,
+country VARCHAR(255) NOT NULL,
+entity_id CHAR(36) NOT NULL,
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+```
 
-CREATE TABLE IF NOT EXISTS users (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(255) NOT NULL UNIQUE,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    first_name VARCHAR(255),
-    last_name VARCHAR(255),
-    role VARCHAR(50) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+```sql
+CREATE TABLE IF NOT EXISTS AGENCY (
+agency_id CHAR(36) PRIMARY KEY,
+name VARCHAR(255) NOT NULL,
+created_at TIMESTAMP NOT NULL
 );
+```
 
-CREATE TABLE IF NOT EXISTS vehicles (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    brand VARCHAR(255) NOT NULL,
-    model VARCHAR(255) NOT NULL,
-    year INT,
-    registration_number VARCHAR(50) UNIQUE,
-    agency_id BIGINT,
-    status VARCHAR(50),
-    price_per_day DECIMAL(10,2),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (agency_id) REFERENCES agencies(id)
+```sql
+CREATE TABLE IF NOT EXISTS CUSTOMER (
+customer_id CHAR(36) PRIMARY KEY,
+email VARCHAR(255) NOT NULL UNIQUE,
+password VARCHAR(255) NOT NULL,
+first_name VARCHAR(255) NOT NULL,
+last_name VARCHAR(255) NOT NULL,
+phone VARCHAR(50) NOT NULL,
+birthday DATE NOT NULL,
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+```
 
-CREATE TABLE IF NOT EXISTS reservations (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    user_id BIGINT NOT NULL,
-    vehicle_id BIGINT NOT NULL,
-    agency_id BIGINT NOT NULL,
-    start_date DATE NOT NULL,
-    end_date DATE NOT NULL,
-    status VARCHAR(50) NOT NULL,
-    total_price DECIMAL(10,2),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (vehicle_id) REFERENCES vehicles(id),
-    FOREIGN KEY (agency_id) REFERENCES agencies(id)
+```sql
+CREATE TABLE IF NOT EXISTS EMPLOYEE (
+employee_id CHAR(36) PRIMARY KEY,
+email VARCHAR(255) NOT NULL UNIQUE,
+first_name VARCHAR(255) NOT NULL,
+last_name VARCHAR(255) NOT NULL,
+role VARCHAR(255) NOT NULL,
+agency_id CHAR(36) NOT NULL,
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+FOREIGN KEY (agency_id) REFERENCES AGENCY(agency_id)
 );
+```
 
 -- Jeu de données de test
-INSERT INTO agencies (name, address, phone, email) VALUES
-('Agence Paris Centre', '15 Rue de Rivoli, 75001 Paris', '0142961234', 'paris@yourcar.com'),
-('Agence Lyon Part-Dieu', '25 Rue de la République, 69002 Lyon', '0478456789', 'lyon@yourcar.com'),
-('Agence Marseille Vieux-Port', '10 Quai du Port, 13002 Marseille', '0491234567', 'marseille@yourcar.com');
+```sql
+INSERT INTO AGENCY (agency_id, name, created_at) VALUES
+('a1b2c3d4-0000-0000-0000-000000000001', 'Agence Paris Centre', NOW()),
+('a1b2c3d4-0000-0000-0000-000000000002', 'Agence Lyon Part-Dieu', NOW()),
+('a1b2c3d4-0000-0000-0000-000000000003', 'Agence Marseille Vieux-Port', NOW());
+```
+```sql
+INSERT INTO ADDRESS (address_id, street, city, postal_code, country, entity_id) VALUES
+('b1b2c3d4-0000-0000-0000-000000000001', '15 Rue de Rivoli', 'Paris', '75001', 'France', 'a1b2c3d4-0000-0000-0000-000000000001'),
+('b1b2c3d4-0000-0000-0000-000000000002', '25 Rue de la République', 'Lyon', '69002', 'France', 'a1b2c3d4-0000-0000-0000-000000000002'),
+('b1b2c3d4-0000-0000-0000-000000000003', '10 Quai du Port', 'Marseille', '13002', 'France', 'a1b2c3d4-0000-0000-0000-000000000003');
+```
+```sql
+INSERT INTO CUSTOMER (customer_id, email, password, first_name, last_name, phone, birthday) VALUES
+('c1b2c3d4-0000-0000-0000-000000000001', 'jean.dupont@example.com', '$2a$10$demoHashedPassword', 'Jean', 'Dupont', '0612345678', '1985-06-15'),
+('c1b2c3d4-0000-0000-0000-000000000002', 'marie.martin@example.com', '$2a$10$demoHashedPassword', 'Marie', 'Martin', '0687654321', '1990-09-22');
+```
 
-INSERT INTO users (username, email, password, first_name, last_name, role) VALUES
-('admin', 'admin@yourcar.com', '$2a$10$demoHashedPassword', 'Admin', 'System', 'ADMIN'),
-('client1', 'client1@example.com', '$2a$10$demoHashedPassword', 'Jean', 'Dupont', 'CLIENT'),
-('client2', 'client2@example.com', '$2a$10$demoHashedPassword', 'Marie', 'Martin', 'CLIENT');
-
-INSERT INTO vehicles (brand, model, year, registration_number, agency_id, status, price_per_day) VALUES
-('Renault', 'Clio', 2023, 'AB-123-CD', 1, 'AVAILABLE', 45.00),
-('Peugeot', '308', 2022, 'EF-456-GH', 1, 'AVAILABLE', 55.00),
-('Citroën', 'C3', 2023, 'IJ-789-KL', 2, 'AVAILABLE', 48.00),
-('Volkswagen', 'Golf', 2022, 'MN-012-OP', 2, 'AVAILABLE', 60.00),
-('Toyota', 'Yaris', 2023, 'QR-345-ST', 3, 'AVAILABLE', 50.00),
-('BMW', 'Série 3', 2023, 'UV-678-WX', 3, 'AVAILABLE', 85.00);
-
-INSERT INTO reservations (user_id, vehicle_id, agency_id, start_date, end_date, status, total_price) VALUES
-(2, 1, 1, '2024-03-01', '2024-03-05', 'CONFIRMED', 180.00),
-(3, 3, 2, '2024-03-10', '2024-03-15', 'CONFIRMED', 240.00);
+```sql
+INSERT INTO EMPLOYEE (employee_id, email, first_name, last_name, role, agency_id) VALUES
+('d1b2c3d4-0000-0000-0000-000000000001', 'admin@yourcar.com', 'Admin', 'System', 'ADMIN', 'a1b2c3d4-0000-0000-0000-000000000001'),
+('d1b2c3d4-0000-0000-0000-000000000002', 'pierre.durand@yourcar.com', 'Pierre', 'Durand', 'AGENT', 'a1b2c3d4-0000-0000-0000-000000000002');
 ```
 
 ### 4. Installer les dépendances Maven

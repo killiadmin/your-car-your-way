@@ -3,9 +3,12 @@ package com.poc.your_car_your_way.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +29,10 @@ public class Customer {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
+    @NotBlank(message = "Password is mandatory")
+    @Column(name = "password", nullable = false)
+    private String password;
+
     @NotBlank(message = "First name is mandatory")
     @Column(name = "first_name", nullable = false)
     private String first_name;
@@ -36,6 +43,11 @@ public class Customer {
 
     @Column(name = "phone", nullable = false)
     private String phone;
+
+    @NotNull(message = "Birthday is mandatory")
+    @Past(message = "Birthday must be in the past")
+    @Column(name = "birthday", nullable = false)
+    private LocalDate birthday;
 
     @Column(name = "created_at")
     private LocalDateTime created_at;
@@ -53,7 +65,7 @@ public class Customer {
     }
 
     public void addAddress(Address address) {
-        address.setUser_id(this.customer_id);
+        address.setEntity_id(this.customer_id);
         this.addresses.add(address);
     }
 

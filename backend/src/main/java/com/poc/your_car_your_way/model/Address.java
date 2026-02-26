@@ -37,8 +37,8 @@ public class Address {
     @Column(name = "created_at")
     private LocalDateTime created_at;
 
-    @Column(name = "user_id", columnDefinition = "CHAR(36)", nullable = false)
-    private UUID user_id;
+    @Column(name = "entity_id", columnDefinition = "CHAR(36)", nullable = false)
+    private UUID entity_id;
 
     public Address() {
         this.address_id = UUID.randomUUID();
